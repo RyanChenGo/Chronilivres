@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ChroniLivres · Accès sur code</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Georgia', 'Times New Roman', serif;
+        }
+
+        body {
+            background: #d9cdb0;
+            background-image: radial-gradient(circle at 20% 35%, rgba(100, 70, 40, 0.08) 2%, transparent 2.5%),
+                              radial-gradient(circle at 80% 70%, rgba(70, 45, 25, 0.08) 1.5%, transparent 2%);
+            background-size: 55px 55px, 65px 65px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .library-container {
+            max-width: 650px;
+            width: 100%;
+            background: #fffef7;
+            background: linear-gradient(145deg, #fff9ef 0%, #fef5e6 100%);
+            border-radius: 48px 32px 48px 32px;
+            box-shadow: 30px 30px 35px rgba(0, 0, 0, 0.2), inset 1px 1px 0 rgba(255, 255, 245, 0.8);
+            padding: 2rem 2rem 2.5rem;
+            border: 1px solid #e9d6b0;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px dashed #c7af7c;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 2.8rem;
+            letter-spacing: 4px;
+            color: #3b2a1f;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+        .header p {
+            color: #8b6f44;
+            font-style: italic;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .search-zone {
+            background: #f3ecdb;
+            border-radius: 60px;
+            padding: 0.2rem 0.2rem 0.2rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            border: 1px solid #dbcba4;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .search-zone input {
+            flex: 3;
+            min-width: 180px;
+            background: transparent;
+            border: none;
+            padding: 1rem 0.5rem;
+            font-size: 1rem;
+            font-family: monospace;
+            letter-spacing: 1px;
+            color: #2f2419;
+            outline: none;
+        }
+        .search-zone input::placeholder {
+            color: #bcab86;
+            font-family: 'Segoe UI', monospace;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .search-zone button {
+            background: #5e3e2b;
+            border: none;
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .search-zone button:hover {
+            background: #3f2a1c;
+            transform: scale(0.97);
+        }
+
+        .message-area {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            min-height: 4rem;
+            font-size: 0.95rem;
+        }
+        .error-msg {
+            color: #ac3e2f;
+            background: #fff0e8;
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            border-left: 5px solid #ac3e2f;
+        }
+        .success-msg {
+            color: #2a6b47;
+            background: #e0f3e9;
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+        .loading-msg {
+            color: #8b6f44;
+            background: #f3ecdb;
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .book-card {
+            background: #fff5e6;
+            border-radius: 32px;
+            padding: 1.5rem;
+            margin-top: 0.5rem;
+            border: 1px solid #e3cfaa;
+            box-shadow: 8px 10px 16px rgba(0, 0, 0, 0.1);
+        }
+        .book-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2b4827;
+            font-family: 'Georgia', serif;
+            border-left: 8px solid #b2874b;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 1.3rem;
+            color: #6f543a;
+            font-size: 0.85rem;
+            border-bottom: 1px dashed #e2cfac;
+            padding-bottom: 0.7rem;
+        }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #2f6b3c;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background: #1e4f2a;
+            transform: translateY(-2px);
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #b19468;
+            margin-top: 2rem;
+            border-top: 1px solid #eddbba;
+            padding-top: 1rem;
+        }
+        @media (max-width: 550px) {
+            .library-container { padding: 1.5rem; }
+            .header h1 { font-size: 2rem; }
+            .book-title { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="library-container">
+    <div class="header">
+        <h1>📖 ChroniLivres</h1>
+        <p>entrez le <strong>Code du cahier</strong> (reçu après achat) pour débloquer le livre</p>
+    </div>
+
+    <div class="search-zone">
+        <input type="text" id="codeInput" placeholder="ex: CAHIER-001" autocomplete="off">
+        <button id="unlockBtn">🔓 Déverrouiller</button>
+    </div>
+
+    <div id="messageArea" class="message-area"></div>
+    <div id="bookResult"></div>
+    <div class="footer-note">
+        🔐 Achat requis — chaque code est unique et permet de télécharger l'ouvrage correspondant.
+    </div>
+</div>
+
+<script>
+    // 页面加载时获取 code.json 但不在 UI 暴露任何原始数据
+    const codeInput = document.getElementById('codeInput');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const messageArea = document.getElementById('messageArea');
+    const bookResultDiv = document.getElementById('bookResult');
+
+    let booksData = null;      // 存储从 code.json 加载的数据
+    let dataLoaded = false;
+
+    function showMessage(text, type = 'error') {
+        messageArea.innerHTML = '';
+        const msgDiv = document.createElement('div');
+        msgDiv.textContent = text;
+        if (type === 'error') msgDiv.className = 'error-msg';
+        else if (type === 'success') msgDiv.className = 'success-msg';
+        else msgDiv.className = 'loading-msg';
+        messageArea.appendChild(msgDiv);
+        setTimeout(() => {
+            if (messageArea.firstChild === msgDiv) msgDiv.style.opacity = '0.8';
+        }, 4000);
+    }
+
+    function clearBook() {
+        bookResultDiv.innerHTML = '';
+    }
+
+    function displayBook(book) {
+        bookResultDiv.innerHTML = '';
+        const card = document.createElement('div');
+        card.className = 'book-card';
+        const title = document.createElement('div');
+        title.className = 'book-title';
+        title.textContent = book.nom;
+        card.appendChild(title);
+        const meta = document.createElement('div');
+        meta.className = 'book-meta';
+        meta.innerHTML = `<span>📌 Code validé : <strong>${escapeHtml(book.code)}</strong></span><span>🔓 débloqué</span>`;
+        card.appendChild(meta);
+        if (book.path && book.path.trim() !== '') {
+            const downloadLink = document.createElement('a');
+            downloadLink.href = book.path;
+            downloadLink.download = '';
+            downloadLink.target = '_blank';
+            downloadLink.rel = 'noopener noreferrer';
+            downloadLink.className = 'download-btn';
+            downloadLink.innerHTML = '⬇️ Télécharger le livre ⬇️';
+            card.appendChild(downloadLink);
+        } else {
+            const errPath = document.createElement('p');
+            errPath.style.color = '#b1624b';
+            errPath.innerHTML = '⚠️ Fichier indisponible. Contactez le support.';
+            card.appendChild(errPath);
+        }
+        bookResultDiv.appendChild(card);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // 加载 code.json (仓库里真实存在的文件)
+    async function loadCodeJson() {
+        try {
+            showMessage('⏳ Chargement de la bibliothèque...', 'loading');
+            const response = await fetch('code.json');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!Array.isArray(data)) throw new Error('Format invalide');
+            booksData = data;
+            dataLoaded = true;
+            showMessage('✅ Bibliothèque prête. Entrez un code valide.', 'success');
+        } catch (err) {
+            console.error(err);
+            showMessage('❌ Impossible de charger la bibliothèque. Vérifiez que code.json existe.', 'error');
+            booksData = [];
+            dataLoaded = false;
+        }
+    }
+
+    // 根据输入的 code 查找匹配的书籍
+    function findBookByCode(inputCode) {
+        if (!booksData || !Array.isArray(booksData)) return null;
+        const trimmed = inputCode.trim();
+        return booksData.find(item => item.code === trimmed) || null;
+    }
+
+    // 处理解锁按钮点击
+    async function handleUnlock() {
+        if (!dataLoaded) {
+            showMessage('La bibliothèque n\'est pas encore prête. Patientez...', 'error');
+            return;
+        }
+        const userCode = codeInput.value;
+        if (!userCode.trim()) {
+            showMessage('Veuillez entrer un Code du cahier.', 'error');
+            clearBook();
+            return;
+        }
+        const matched = findBookByCode(userCode);
+        if (!matched) {
+            showMessage(`Code "${userCode}" invalide. Aucun livre associé.`, 'error');
+            clearBook();
+            return;
+        }
+        // 匹配成功
+        showMessage(`Code validé : "${matched.code}" — accès autorisé.`, 'success');
+        displayBook(matched);
+    }
+
+    // 初始化
+    loadCodeJson();
+    unlockBtn.addEventListener('click', handleUnlock);
+    codeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleUnlock();
+    });
+</script>
+</body>
+</html>
