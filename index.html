@@ -295,7 +295,7 @@
             showMessage('✅ Bibliothèque prête. Entrez un code valide.', 'success');
         } catch (err) {
             console.error(err);
-            showMessage('❌ Impossible de charger la bibliothèque. Vérifiez que code.json existe.', 'error');
+            showMessage('❌ Impossible de charger la bibliothèque. CODEERROR:RefreshPage', 'error');
             booksData = [];
             dataLoaded = false;
         }
